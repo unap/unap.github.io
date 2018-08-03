@@ -1,4 +1,3 @@
-
 const maxOffset = 75;
 
 function Vehicle(x, y, r) {
@@ -8,7 +7,7 @@ function Vehicle(x, y, r) {
   this.acc = createVector();
   this.r = r;
   this.maxspeed = 7;
-  this.maxforce = 2;  
+  this.maxforce = 2;
 }
 
 Vehicle.prototype.behaviors = function() {
@@ -21,7 +20,7 @@ Vehicle.prototype.behaviors = function() {
 
   this.applyForce(arrive);
   this.applyForce(flee);
-}
+};
 
 Vehicle.prototype.explode = function(x, y, force) {
   var arrive = this.arrive(this.target);
@@ -33,23 +32,34 @@ Vehicle.prototype.explode = function(x, y, force) {
 
   this.applyForce(arrive);
   this.applyForce(flee);
-}
+};
 
 Vehicle.prototype.applyForce = function(f) {
   this.acc.add(f);
-}
+};
 
 Vehicle.prototype.update = function() {
   this.pos.add(this.vel);
   this.vel.add(this.acc);
   this.acc.mult(0);
-}
+};
 
 Vehicle.prototype.show = function() {
-  stroke(hsl(this.pos.x, this.pos.y));
-  strokeWeight(this.r);
-  point(this.pos.x, this.pos.y);
-}
+  const angle = Math.atan2(this.pos.x - this.target.x, this.pos.y - this.target.y);
+  noStroke();
+  push();
+
+  translate(this.pos.x, this.pos.y);
+  rotate(-angle);
+
+  const d = p5.Vector.sub(this.pos, this.target);
+  fill(hsl(this.pos.x, this.pos.y));
+  ellipse(0, 0, this.r, this.r * Math.max(Math.sqrt(d.mag()), 1));
+  strokeWeight(1);
+  stroke('white');
+
+  pop();
+};
 
 Vehicle.prototype.arrive = function(target) {
   var desired = p5.Vector.sub(target, this.pos);
@@ -62,7 +72,7 @@ Vehicle.prototype.arrive = function(target) {
   var steer = p5.Vector.sub(desired, this.vel);
   steer.limit(this.maxforce);
   return steer;
-}
+};
 
 Vehicle.prototype.flee = function(target) {
   var desired = p5.Vector.sub(target, this.pos);
@@ -76,4 +86,4 @@ Vehicle.prototype.flee = function(target) {
   } else {
     return createVector(0, 0);
   }
-}
+};

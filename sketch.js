@@ -9,7 +9,7 @@ let points;
 let canvas;
 
 function fontMiddle() {
-  return fontSize * 0.30;
+  return fontSize * 0.3;
 }
 
 function debounce(callback, time) {
@@ -21,15 +21,15 @@ function debounce(callback, time) {
       callback(...args);
     }, time);
   };
-};
+}
 
 let iter = 0;
 function hsl(x, y) {
-  const val = ((x * 0.1 + iter) + (y * 0.25 + iter)) % 360;
+  const val = (x * 0.1 + iter + (y * 0.25 + iter)) % 360;
 
   return `hsl(${floor(val)}, 100%, 50%)`;
 }
-setInterval(function () {
+setInterval(function() {
   iter++;
 }, 100);
 
@@ -43,13 +43,13 @@ function setup() {
 
   textWidth = width * 0.8;
   text = 'Panu Asikanius';
-  charWidth = (textWidth / text.length);
+  charWidth = textWidth / text.length;
 
   fontSize = charWidth * 2;
   vehicleSize = width / 250;
 
-  textX = (width - textWidth) / 1.7
-  textY = (height / 2) + fontMiddle();
+  textX = (width - textWidth) / 1.7;
+  textY = height / 2 + fontMiddle();
 
   canvas = createCanvas(width, height);
 
@@ -65,13 +65,14 @@ function setup() {
     const vehicle = new Vehicle(pt.x, pt.y, vehicleSize);
     vehicles.push(vehicle);
   }
+  //vehicles.push(new Vehicle(width / 2, height / 2, 3));
 }
 
 const debouncedSetup = debounce(setup, 250);
 
 window.addEventListener('resize', debouncedSetup);
 
-function isPageVisible(){
+function isPageVisible() {
   return !(document.hidden || document.msHidden || document.webkitHidden || document.mozHidden);
 }
 
@@ -96,7 +97,7 @@ function explosion() {
       v.explode(pt.x, y, force);
     }
   }
-  timeouts.push(setTimeout(explosion, randomTime()));
+  //timeouts.push(setTimeout(explosion, randomTime()));
   timeouts.push(setTimeout(explosion, randomTime()));
 }
 timeouts.push(setTimeout(explosion, 2000));
@@ -111,6 +112,7 @@ function resetTimeouts() {
 
 function draw() {
   background(0);
+  fill('white');
   for (let i = 0; i < vehicles.length; i++) {
     const v = vehicles[i];
     v.show();
